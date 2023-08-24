@@ -1,4 +1,83 @@
 parameters:
   cilium:
     =_metadata: {}
-    namespace: syn-cilium
+    namespace: kube-system
+
+    charts:
+      cilium:
+        source: https://helm.cilium.io
+        version: 1.14.1
+
+    cluster:
+      name: ${cluster:name}
+      id: 0
+
+    encryption:
+      enabled: false
+      type: wireguard
+
+    hubble:
+      enabled: false
+
+    ingress:
+      enabled: false
+      config:
+        default: true
+        type: NodePort
+        mode: 'shared'
+        portHttp: 30080
+        portHttps: 30443
+        enforceHttps: false
+
+    ipv4:
+      enabled: true
+      config:
+        clusterPoolCIDR: '10.128.0.0/14'
+        clusterPoolMask: '23'
+
+    ipv6:
+      enabled: false
+      config:
+        clusterPoolCIDR: 'fd00::/104'
+        clusterPoolMask: '120'
+
+    kubeProxy:
+      mode: 'false'
+      host: ''
+      port: ''
+
+    helmValues:
+      cluster: ${cilium:cluster}
+      encryption: ${cilium:encryption}
+      hubble: ${cilium:hubble}
+      ingressController:
+        enabled: ${cilium:ingress:enabled}
+        default: ${cilium:ingress:config:default}
+        enforceHttps: ${cilium:ingress:config:enforceHttps}
+        loadbalancerMode: ${cilium:ingress:config:mode}
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
+        service:
+          type: ${cilium:ingress:config:type}
+          insecureNodePort: ${cilium:ingress:config:portHttp}
+          secureNodePort: ${cilium:ingress:config:portHttps}
+      ipv4:
+        enabled: ${cilium:ipv4:enabled}
+      ipv6:
+        enabled: ${cilium:ipv6:enabled}
+      ipam:
+        operator:
+          clusterPoolIPv4PodCIDRList:
+            - ${cilium:ipv4:config:clusterPoolCIDR}
+          clusterPoolIPv4MaskSize: ${cilium:ipv4:config:clusterPoolMask}
+          clusterPoolIPv6PodCIDRList:
+            - ${cilium:ipv6:config:clusterPoolCIDR}
+          clusterPoolIPv6MaskSize: ${cilium:ipv6:config:clusterPoolMask}
+      kubeProxyReplacement: ${cilium:kubeProxy:mode}
+      k8sServiceHost: ${cilium:kubeProxy:host}
+      k8sServicePort: ${cilium:kubeProxy:port}
+      operator:
+        priorityClassName: 'system-cluster-critical'
+        replicas: 1
+      priorityClassName: 'system-cluster-critical'
