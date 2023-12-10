@@ -1,0 +1,17 @@
+# Overwrite parameters here
+
+parameters:
+  cilium:
+    bgp:
+      enabled: true
+      config:
+        peers:
+          default:
+            peer-address: 10.0.0.1
+            peer-asn: 64512
+            my-asn: 64512
+        addrPools:
+          default:
+            protocol: bgp
+            addresses:
+              - 192.168.0.0/24

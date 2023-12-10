@@ -7,7 +7,7 @@
       "name": "Cilium",
       "slug": "cilium",
       "parameter_key": "cilium",
-      "test_cases": "defaults gateway",
+      "test_cases": "defaults gateway bgp",
       "add_lib": "n",
       "add_pp": "n",
       "add_golden": "y",
