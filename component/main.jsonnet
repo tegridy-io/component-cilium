@@ -14,7 +14,10 @@ local namespace = kube.Namespace(params.namespace) {
   },
 };
 
+local crds = std.parseJson(kap.yaml_load_stream('cilium/crds/gateway_api/%s/standard.yaml' % params.gateway.version));
+
 // Define outputs below
 {
   [if params.namespace != 'kube-system' then '00_namespace']: namespace,
+  [if params.gateway.enabled then '00_crds_gateway']: crds,
 }
