@@ -19,6 +19,10 @@ parameters:
     hubble:
       enabled: false
 
+    gateway:
+      version: v1.0.0
+      enabled: false
+
     ingress:
       enabled: false
       config:
@@ -50,6 +54,11 @@ parameters:
       cluster: ${cilium:cluster}
       encryption: ${cilium:encryption}
       hubble: ${cilium:hubble}
+      gatewayAPI:
+        enabled: ${cilium:gateway:enabled}
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
       ingressController:
         enabled: ${cilium:ingress:enabled}
         default: ${cilium:ingress:config:default}

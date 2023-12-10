@@ -6,6 +6,12 @@ parameters:
         chart_name: cilium
         version: ${cilium:charts:cilium:version}
         output_path: ${_base_directory}/helmcharts/cilium/${cilium:charts:cilium:version}/
+      - type: https
+        source: https://github.com/kubernetes-sigs/gateway-api/releases/download/${cilium:gateway:version}/standard-install.yaml
+        output_path: ${_base_directory}/crds/gateway_api/${cilium:gateway:version}/standard.yaml
+      - type: https
+        source: https://github.com/kubernetes-sigs/gateway-api/releases/download/${cilium:gateway:version}/experimental-install.yaml
+        output_path: ${_base_directory}/crds/gateway_api/${cilium:gateway:version}/experimental.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
