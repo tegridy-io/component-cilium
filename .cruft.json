@@ -1,13 +1,13 @@
 {
   "template": "https://github.com/projectsyn/commodore-component-template.git",
-  "commit": "dcae06138d227340acb8056d0d031f32d75c09b5",
+  "commit": "a47f4459dca78152eaf17e4897f1cbf0c8b67a3a",
   "checkout": "main",
   "context": {
     "cookiecutter": {
       "name": "Cilium",
       "slug": "cilium",
       "parameter_key": "cilium",
-      "test_cases": "defaults",
+      "test_cases": "defaults gateway",
       "add_lib": "n",
       "add_pp": "n",
       "add_golden": "y",
