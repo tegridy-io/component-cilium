@@ -161,9 +161,6 @@ spec:
               readOnly: true
             - mountPath: /run/xtables.lock
               name: xtables-lock
-            - mountPath: /var/lib/cilium/bgp
-              name: bgp-config-path
-              readOnly: true
             - mountPath: /tmp
               name: tmp
       hostNetwork: true
@@ -390,9 +387,6 @@ spec:
                       path: common-etcd-client-ca.crt
                   name: clustermesh-apiserver-remote-cert
                   optional: true
-        - configMap:
-            name: bgp-config
-          name: bgp-config-path
         - hostPath:
             path: /proc/sys/net
             type: Directory
