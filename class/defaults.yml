@@ -6,7 +6,7 @@ parameters:
     charts:
       cilium:
         source: https://helm.cilium.io
-        version: 1.14.6
+        version: 1.15.0
 
     cluster:
       name: ${cluster:name}

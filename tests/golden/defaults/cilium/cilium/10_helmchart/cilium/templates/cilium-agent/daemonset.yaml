@@ -49,7 +49,11 @@ spec:
                   fieldPath: metadata.namespace
             - name: CILIUM_CLUSTERMESH_CONFIG
               value: /var/lib/cilium/clustermesh/
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.memory
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -138,6 +142,7 @@ spec:
               path: /healthz
               port: 9879
               scheme: HTTP
+            initialDelaySeconds: 5
             periodSeconds: 2
             successThreshold: 1
           terminationMessagePolicy: FallbackToLogsOnError
@@ -166,7 +171,7 @@ spec:
       hostNetwork: true
       initContainers:
         - command:
-            - cilium
+            - cilium-dbg
             - build-config
           env:
             - name: K8S_NODE_NAME
@@ -179,7 +184,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: config
           terminationMessagePolicy: FallbackToLogsOnError
@@ -198,7 +203,7 @@ spec:
               value: /run/cilium/cgroupv2
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: mount-cgroup
           securityContext:
@@ -228,7 +233,7 @@ spec:
           env:
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: apply-sysctl-overwrites
           securityContext:
@@ -254,7 +259,7 @@ spec:
             - /bin/bash
             - -c
             - --
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: mount-bpf-fs
           securityContext:
@@ -279,7 +284,13 @@ spec:
                   key: clean-cilium-bpf-state
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+            - name: WRITE_CNI_CONF_WHEN_READY
+              valueFrom:
+                configMapKeyRef:
+                  key: write-cni-conf-when-ready
+                  name: cilium-config
+                  optional: true
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: clean-cilium-state
           securityContext:
@@ -305,7 +316,7 @@ spec:
               name: cilium-run
         - command:
             - /install-plugin.sh
-          image: quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a
+          image: quay.io/cilium/cilium:v1.15.0@sha256:9cfd6a0a3a964780e73a11159f93cc363e616f7d9783608f62af6cfdf3759619
           imagePullPolicy: IfNotPresent
           name: install-cni-binaries
           resources:
