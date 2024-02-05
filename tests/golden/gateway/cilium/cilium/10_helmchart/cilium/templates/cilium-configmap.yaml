@@ -22,6 +22,7 @@ data:
   debug: 'false'
   debug-verbose: ''
   disable-cnp-status-updates: 'true'
+  dnsproxy-enable-transparent-mode: 'true'
   egress-gateway-reconciliation-trigger-interval: 1s
   enable-auto-protect-node-port-range: 'true'
   enable-bgp-control-plane: 'false'
