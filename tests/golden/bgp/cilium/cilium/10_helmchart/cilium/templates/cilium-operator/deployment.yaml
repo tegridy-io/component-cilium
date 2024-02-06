@@ -21,7 +21,9 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations: null
+      annotations:
+        prometheus.io/port: '9963'
+        prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/name: cilium-operator
         app.kubernetes.io/part-of: cilium
@@ -59,7 +61,7 @@ spec:
                   key: debug
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/operator-generic:v1.14.6@sha256:2f0bf8fb8362c7379f3bf95036b90ad5b67378ed05cd8eb0410c1afc13423848
+          image: quay.io/cilium/operator-generic:v1.15.0@sha256:e26ecd316e742e4c8aa1e302ba8b577c2d37d114583d6c4cdd2b638493546a79
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -71,6 +73,11 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
           name: cilium-operator
+          ports:
+            - containerPort: 9963
+              hostPort: 9963
+              name: prometheus
+              protocol: TCP
           readinessProbe:
             failureThreshold: 5
             httpGet:

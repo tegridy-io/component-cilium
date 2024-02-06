@@ -31,9 +31,3 @@ parameters:
           name: cilium
           namespace: ${cilium:namespace}
           dependency_update: true
-  commodore:
-    postprocess:
-      filters:
-        - type: jsonnet
-          path: cilium/10_helmchart/cilium/templates
-          filter: postprocess/patch_template.jsonnet
