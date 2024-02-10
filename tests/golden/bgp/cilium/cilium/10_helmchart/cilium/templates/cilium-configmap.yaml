@@ -3,8 +3,7 @@ data:
   agent-not-ready-taint-key: node.cilium.io/agent-not-ready
   arping-refresh-period: 30s
   auto-direct-node-routes: 'false'
-  bgp-announce-lb-ip: 'true'
-  bgp-announce-pod-cidr: 'true'
+  bgp-secrets-namespace: kube-system
   bpf-lb-acceleration: disabled
   bpf-lb-external-clusterip: 'false'
   bpf-lb-map-max: '65536'
@@ -26,7 +25,7 @@ data:
   dnsproxy-enable-transparent-mode: 'true'
   egress-gateway-reconciliation-trigger-interval: 1s
   enable-auto-protect-node-port-range: 'true'
-  enable-bgp-control-plane: 'false'
+  enable-bgp-control-plane: 'true'
   enable-bpf-clock-probe: 'false'
   enable-endpoint-health-checking: 'true'
   enable-external-ips: 'false'
