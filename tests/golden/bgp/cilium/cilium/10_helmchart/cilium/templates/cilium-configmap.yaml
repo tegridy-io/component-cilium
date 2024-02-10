@@ -4,7 +4,6 @@ data:
   arping-refresh-period: 30s
   auto-direct-node-routes: 'false'
   bgp-announce-lb-ip: 'true'
-  bgp-announce-pod-cidr: 'true'
   bpf-lb-acceleration: disabled
   bpf-lb-external-clusterip: 'false'
   bpf-lb-map-max: '65536'
