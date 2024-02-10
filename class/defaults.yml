@@ -28,6 +28,7 @@ parameters:
     gateway:
       version: v1.0.0
       enabled: false
+      classes: {}
 
     ingress:
       enabled: false
