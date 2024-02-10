@@ -4,14 +4,22 @@ parameters:
   cilium:
     bgp:
       enabled: true
-      config:
-        peers:
-          default:
-            peer-address: 10.0.0.1
-            peer-asn: 64512
-            my-asn: 64512
-        addrPools:
-          default:
-            protocol: bgp
-            addresses:
-              - 192.168.0.0/24
+      peeringPolicies:
+        default:
+          virtualRouters:
+            - localASN: 64512
+              exportPodCIDR: true
+              neighbors:
+                - peerAddress: 10.10.10.1
+                  peerASN: 64512
+                  eBGPMultihopTTL: 10
+                  connectRetryTimeSeconds: 120
+                  holdTimeSeconds: 90
+                  keepAliveTimeSeconds: 30
+                  gracefulRestart:
+                    enabled: true
+                    restartTimeSeconds: 120
+      loadbalancerPools:
+        default:
+          - start: 10.10.10.10
+            stop: 10.10.10.99

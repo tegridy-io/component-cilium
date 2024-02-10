@@ -21,11 +21,8 @@ parameters:
 
     bgp:
       enabled: false
-      config:
-        announceLBAddr: true
-        announcePodCIDR: true
-        peers: {}
-        addrPools: {}
+      peeringPolicies: {}
+      loadbalancerPools: {}
 
     gateway:
       version: v1.0.0
@@ -63,10 +60,12 @@ parameters:
       encryption: ${cilium:encryption}
       hubble: ${cilium:hubble}
       bgp:
+        enabled: false
+      bgpControlPlane:
         enabled: ${cilium:bgp:enabled}
-        announce:
-          loadbalancerIP: ${cilium:bgp:config:announceLBAddr}
-          podCIDR: ${cilium:bgp:config:announcePodCIDR}
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
       gatewayAPI:
         enabled: ${cilium:gateway:enabled}
         secretsNamespace:

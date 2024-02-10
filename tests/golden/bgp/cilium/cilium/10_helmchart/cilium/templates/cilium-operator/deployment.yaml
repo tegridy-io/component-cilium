@@ -93,9 +93,6 @@ spec:
             - mountPath: /tmp/cilium/config-map
               name: cilium-config-path
               readOnly: true
-            - mountPath: /var/lib/cilium/bgp
-              name: bgp-config-path
-              readOnly: true
       hostNetwork: true
       nodeSelector:
         kubernetes.io/os: linux
@@ -109,6 +106,3 @@ spec:
         - configMap:
             name: cilium-config
           name: cilium-config-path
-        - configMap:
-            name: bgp-config
-          name: bgp-config-path
