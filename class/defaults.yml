@@ -22,6 +22,8 @@ parameters:
 
     bgp:
       enabled: false
+      peeringPolicies: {}
+      loadbalancerPools: {}
 
     gateway:
       version: v1.0.0
@@ -58,6 +60,11 @@ parameters:
       cluster: ${cilium:cluster}
       encryption: ${cilium:encryption}
       hubble: ${cilium:hubble}
+      bgpControlPlane:
+        enabled: ${cilium:bgp:enabled}
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
       gatewayAPI:
         enabled: ${cilium:gateway:enabled}
         secretsNamespace:
@@ -99,11 +106,6 @@ parameters:
           create: false
           name: ${cilium:namespace}
       tls:
-        secretsNamespace:
-          create: false
-          name: ${cilium:namespace}
-      bgpControlPlane:
-        enabled: ${cilium:bgp:enabled}
         secretsNamespace:
           create: false
           name: ${cilium:namespace}
