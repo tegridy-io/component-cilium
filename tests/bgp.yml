@@ -4,13 +4,3 @@ parameters:
   cilium:
     bgp:
       enabled: true
-      config: |
-        address-pools:
-          - addresses:
-              - 10.10.10.0/24
-            name: default
-            protocol: bgp
-        peers:
-          - my-asn: 65001
-            peer-address: 10.10.10.1
-            peer-asn: 64512

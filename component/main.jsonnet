@@ -29,5 +29,5 @@ local bgp_configmap = kube.ConfigMap('bgp-config') {
 {
   [if params.namespace != 'kube-system' then '00_namespace']: namespace,
   [if params.gateway.enabled then '00_crds_gateway']: crds,
-  [if params.bgp.enabled then '20_bgp_configmap']: bgp_configmap,
+  // [if params.bgp.enabled then '20_bgp_configmap']: bgp_configmap,
 }
