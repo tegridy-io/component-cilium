@@ -49,7 +49,6 @@ spec:
             - -c /var/run/cilium/envoy/bootstrap-config.json
             - --base-id 0
             - --log-level info
-            - --log-format [%Y-%m-%d %T.%e][%t][%l][%n] [%g:%#] %v
           command:
             - /usr/bin/cilium-envoy-starter
           env:
@@ -63,7 +62,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium-envoy:v1.34.12-1767177245-7935d4d711cb6f8020385a50c996b90896e16a71@sha256:377175048c79d12c129d29e7a56268e1edaad37c96e649e892465c01bf2b4f8f
+          image: quay.io/cilium/cilium-envoy:v1.34.10-1760767433-887ebe7d6ccc2a9dc8c73f6ae4927283283b507e@sha256:78a7c6ceb4135680eb94ed1ca80b1be00647878e6694522f8380cc2a8b99e434
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

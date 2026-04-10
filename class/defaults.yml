@@ -7,7 +7,7 @@ parameters:
     charts:
       cilium:
         source: https://helm.cilium.io
-        version: 1.16.19
+        version: 1.17.9
 
     cluster:
       name: ${cluster:name}
@@ -22,9 +22,6 @@ parameters:
 
     bgp:
       enabled: false
-      announceLBAddr: true
-      announcePodCIDR: false
-      config: ''
 
     gateway:
       version: v1.0.0
@@ -61,11 +58,6 @@ parameters:
       cluster: ${cilium:cluster}
       encryption: ${cilium:encryption}
       hubble: ${cilium:hubble}
-      bgp:
-        enabled: ${cilium:bgp:enabled}
-        announce:
-          loadbalancerIP: ${cilium:bgp:announceLBAddr}
-          podCIDR: ${cilium:bgp:announcePodCIDR}
       gatewayAPI:
         enabled: ${cilium:gateway:enabled}
         secretsNamespace:
@@ -102,3 +94,16 @@ parameters:
         priorityClassName: 'system-cluster-critical'
         replicas: 1
       priorityClassName: 'system-cluster-critical'
+      envoyConfig:
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
+      tls:
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
+      bgpControlPlane:
+        enabled: ${cilium:bgp:enabled}
+        secretsNamespace:
+          create: false
+          name: ${cilium:namespace}
