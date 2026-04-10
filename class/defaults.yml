@@ -6,7 +6,7 @@ parameters:
     charts:
       cilium:
         source: https://helm.cilium.io
-        version: 1.15.1
+        version: 1.16.19
 
     cluster:
       name: ${cluster:name}
@@ -43,13 +43,13 @@ parameters:
       enabled: true
       config:
         clusterPoolCIDR: '10.128.0.0/14'
-        clusterPoolMask: '23'
+        clusterPoolMask: 23
 
     ipv6:
       enabled: false
       config:
         clusterPoolCIDR: 'fd00::/104'
-        clusterPoolMask: '120'
+        clusterPoolMask: 120
 
     kubeProxy:
       mode: 'false'
