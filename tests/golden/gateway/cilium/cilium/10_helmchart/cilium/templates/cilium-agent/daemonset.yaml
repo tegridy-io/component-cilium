@@ -13,11 +13,7 @@ spec:
       k8s-app: cilium
   template:
     metadata:
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/apply-sysctl-overwrites: unconfined
-        container.apparmor.security.beta.kubernetes.io/cilium-agent: unconfined
-        container.apparmor.security.beta.kubernetes.io/clean-cilium-state: unconfined
-        container.apparmor.security.beta.kubernetes.io/mount-cgroup: unconfined
+      annotations: null
       labels:
         app.kubernetes.io/name: cilium-agent
         app.kubernetes.io/part-of: cilium
@@ -52,8 +48,9 @@ spec:
             - name: GOMEMLIMIT
               valueFrom:
                 resourceFieldRef:
+                  divisor: '1'
                   resource: limits.memory
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -91,6 +88,8 @@ spec:
               host: 127.0.0.1
               httpHeaders:
                 - name: brief
+                  value: 'true'
+                - name: require-k8s-connectivity
                   value: 'true'
               path: /healthz
               port: 9879
@@ -147,6 +146,9 @@ spec:
             successThreshold: 1
           terminationMessagePolicy: FallbackToLogsOnError
           volumeMounts:
+            - mountPath: /var/run/cilium/envoy/sockets
+              name: envoy-sockets
+              readOnly: false
             - mountPath: /host/proc/sys/net
               name: host-proc-sys-net
             - mountPath: /host/proc/sys/kernel
@@ -156,6 +158,9 @@ spec:
               name: bpf-maps
             - mountPath: /var/run/cilium
               name: cilium-run
+            - mountPath: /var/run/cilium/netns
+              mountPropagation: HostToContainer
+              name: cilium-netns
             - mountPath: /host/etc/cni/net.d
               name: etc-cni-netd
             - mountPath: /var/lib/cilium/clustermesh
@@ -184,7 +189,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: config
           terminationMessagePolicy: FallbackToLogsOnError
@@ -203,7 +208,7 @@ spec:
               value: /run/cilium/cgroupv2
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: mount-cgroup
           securityContext:
@@ -233,7 +238,7 @@ spec:
           env:
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: apply-sysctl-overwrites
           securityContext:
@@ -259,7 +264,7 @@ spec:
             - /bin/bash
             - -c
             - --
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: mount-bpf-fs
           securityContext:
@@ -290,7 +295,7 @@ spec:
                   key: write-cni-conf-when-ready
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: clean-cilium-state
           securityContext:
@@ -316,7 +321,7 @@ spec:
               name: cilium-run
         - command:
             - /install-plugin.sh
-          image: quay.io/cilium/cilium:v1.15.1@sha256:351d6685dc6f6ffbcd5451043167cfa8842c6decf80d8c8e426a417c73fb56d4
+          image: quay.io/cilium/cilium:v1.16.19@sha256:f0c260e30ef97ce3e45e833e702ab47efbbb1dadd0a394969c0a65553e98fefb
           imagePullPolicy: IfNotPresent
           name: install-cni-binaries
           resources:
@@ -338,7 +343,11 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
       restartPolicy: Always
-      serviceAccount: cilium
+      securityContext:
+        appArmorProfile:
+          type: Unconfined
+        seccompProfile:
+          type: Unconfined
       serviceAccountName: cilium
       terminationGracePeriodSeconds: 1
       tolerations:
@@ -350,6 +359,10 @@ spec:
             path: /var/run/cilium
             type: DirectoryOrCreate
           name: cilium-run
+        - hostPath:
+            path: /var/run/netns
+            type: DirectoryOrCreate
+          name: cilium-netns
         - hostPath:
             path: /sys/fs/bpf
             type: DirectoryOrCreate
@@ -377,6 +390,10 @@ spec:
             path: /run/xtables.lock
             type: FileOrCreate
           name: xtables-lock
+        - hostPath:
+            path: /var/run/cilium/envoy/sockets
+            type: DirectoryOrCreate
+          name: envoy-sockets
         - name: clustermesh-secrets
           projected:
             defaultMode: 256
@@ -393,6 +410,16 @@ spec:
                     - key: ca.crt
                       path: common-etcd-client-ca.crt
                   name: clustermesh-apiserver-remote-cert
+                  optional: true
+              - secret:
+                  items:
+                    - key: tls.key
+                      path: local-etcd-client.key
+                    - key: tls.crt
+                      path: local-etcd-client.crt
+                    - key: ca.crt
+                      path: local-etcd-client-ca.crt
+                  name: clustermesh-apiserver-local-cert
                   optional: true
         - hostPath:
             path: /proc/sys/net

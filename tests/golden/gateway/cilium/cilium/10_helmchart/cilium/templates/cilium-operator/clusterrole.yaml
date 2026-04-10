@@ -16,6 +16,14 @@ rules:
       - delete
   - apiGroups:
       - ''
+    resourceNames:
+      - cilium-config
+    resources:
+      - configmaps
+    verbs:
+      - patch
+  - apiGroups:
+      - ''
     resources:
       - nodes
     verbs:
@@ -177,6 +185,7 @@ rules:
     resources:
       - ciliumloadbalancerippools
       - ciliumpodippools
+      - ciliumbgppeeringpolicies
       - ciliumbgpclusterconfigs
       - ciliumbgpnodeconfigoverrides
     verbs:
@@ -228,3 +237,11 @@ rules:
     verbs:
       - update
       - patch
+  - apiGroups:
+      - multicluster.x-k8s.io
+    resources:
+      - serviceimports
+    verbs:
+      - get
+      - list
+      - watch
