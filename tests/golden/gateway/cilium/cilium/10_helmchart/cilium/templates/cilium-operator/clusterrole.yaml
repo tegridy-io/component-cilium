@@ -74,6 +74,18 @@ rules:
       - delete
       - patch
   - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - delete
+      - patch
+  - apiGroups:
       - cilium.io
     resources:
       - ciliumnetworkpolicies
@@ -162,7 +174,6 @@ rules:
       - apiextensions.k8s.io
     resourceNames:
       - ciliumloadbalancerippools.cilium.io
-      - ciliumbgppeeringpolicies.cilium.io
       - ciliumbgpclusterconfigs.cilium.io
       - ciliumbgppeerconfigs.cilium.io
       - ciliumbgpadvertisements.cilium.io
@@ -174,7 +185,6 @@ rules:
       - ciliumendpoints.cilium.io
       - ciliumendpointslices.cilium.io
       - ciliumenvoyconfigs.cilium.io
-      - ciliumexternalworkloads.cilium.io
       - ciliumidentities.cilium.io
       - ciliumlocalredirectpolicies.cilium.io
       - ciliumnetworkpolicies.cilium.io
@@ -183,6 +193,7 @@ rules:
       - ciliumcidrgroups.cilium.io
       - ciliuml2announcementpolicies.cilium.io
       - ciliumpodippools.cilium.io
+      - ciliumgatewayclassconfigs.cilium.io
     resources:
       - customresourcedefinitions
     verbs:
@@ -192,7 +203,6 @@ rules:
     resources:
       - ciliumloadbalancerippools
       - ciliumpodippools
-      - ciliumbgppeeringpolicies
       - ciliumbgpclusterconfigs
       - ciliumbgpnodeconfigoverrides
       - ciliumbgppeerconfigs
@@ -237,11 +247,32 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      - gatewayclasses
+    verbs:
+      - patch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
       - gatewayclasses/status
       - gateways/status
       - httproutes/status
       - grpcroutes/status
       - tlsroutes/status
+    verbs:
+      - update
+      - patch
+  - apiGroups:
+      - cilium.io
+    resources:
+      - ciliumgatewayclassconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - cilium.io
+    resources:
+      - ciliumgatewayclassconfigs/status
     verbs:
       - update
       - patch
@@ -253,3 +284,9 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - cilium.io
+    resources:
+      - ciliumendpointslices
+    verbs:
+      - deletecollection
