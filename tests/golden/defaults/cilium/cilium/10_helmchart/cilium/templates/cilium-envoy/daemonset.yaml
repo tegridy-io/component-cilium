@@ -14,7 +14,8 @@ spec:
       k8s-app: cilium-envoy
   template:
     metadata:
-      annotations: null
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/cilium-envoy: unconfined
       labels:
         app.kubernetes.io/name: cilium-envoy
         app.kubernetes.io/part-of: cilium
@@ -62,7 +63,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium-envoy:v1.34.10-1760767433-887ebe7d6ccc2a9dc8c73f6ae4927283283b507e@sha256:78a7c6ceb4135680eb94ed1ca80b1be00647878e6694522f8380cc2a8b99e434
+          image: quay.io/cilium/cilium-envoy:v1.36.6-1776000132-2437d2edeaf4d9b56ef279bd0d71127440c067aa@sha256:ba0ab8adac082d50d525fd2c5ba096c8facea3a471561b7c61c7a5b9c2e0de0d
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -129,9 +130,6 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-node-critical
       restartPolicy: Always
-      securityContext:
-        appArmorProfile:
-          type: Unconfined
       serviceAccountName: cilium-envoy
       terminationGracePeriodSeconds: 1
       tolerations:

@@ -13,7 +13,11 @@ spec:
       k8s-app: cilium
   template:
     metadata:
-      annotations: null
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/apply-sysctl-overwrites: unconfined
+        container.apparmor.security.beta.kubernetes.io/cilium-agent: unconfined
+        container.apparmor.security.beta.kubernetes.io/clean-cilium-state: unconfined
+        container.apparmor.security.beta.kubernetes.io/mount-cgroup: unconfined
       labels:
         app.kubernetes.io/name: cilium-agent
         app.kubernetes.io/part-of: cilium
@@ -50,7 +54,7 @@ spec:
                 resourceFieldRef:
                   divisor: '1'
                   resource: limits.memory
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -189,7 +193,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: config
           terminationMessagePolicy: FallbackToLogsOnError
@@ -208,7 +212,7 @@ spec:
               value: /run/cilium/cgroupv2
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: mount-cgroup
           securityContext:
@@ -238,7 +242,7 @@ spec:
           env:
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: apply-sysctl-overwrites
           securityContext:
@@ -264,7 +268,7 @@ spec:
             - /bin/bash
             - -c
             - --
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: mount-bpf-fs
           securityContext:
@@ -295,7 +299,7 @@ spec:
                   key: write-cni-conf-when-ready
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: clean-cilium-state
           securityContext:
@@ -321,7 +325,7 @@ spec:
               name: cilium-run
         - command:
             - /install-plugin.sh
-          image: quay.io/cilium/cilium:v1.17.9@sha256:6792747da10f8daf2ae7f028713bc4f4cff335451fa70bfb211557e95cb1e6a5
+          image: quay.io/cilium/cilium:v1.17.15@sha256:ace76d778230cf6f989cf358642361ee37821a2d1b1d388750b6d4148baab09b
           imagePullPolicy: IfNotPresent
           name: install-cni-binaries
           resources:
@@ -344,8 +348,6 @@ spec:
       priorityClassName: system-cluster-critical
       restartPolicy: Always
       securityContext:
-        appArmorProfile:
-          type: Unconfined
         seccompProfile:
           type: Unconfined
       serviceAccountName: cilium
